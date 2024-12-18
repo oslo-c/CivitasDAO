@@ -1,5 +1,3 @@
-So the simple fact of the matter is that I have been working on this idea for the last 36 hours straight. Most of my work is probably shit, because I had to quick learn javascript, npm, hardhat, and other project dependencies
-I am very tired and I am going to go to bed soon, but the basic idea is this:
 This system is an ERC-20 token with a public voting mechanism to adjust parameters—mint rate, burn rate, or pause state—once every set time interval (e.g., every minute). 
 
 During the interval, users cast votes by spending tokens. All tokens spent on voting are burned upon finalization of the interval. All mints are distributed according to historic voting rate at the end of each interval. 
