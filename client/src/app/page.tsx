@@ -14,7 +14,7 @@ type Resolution = {
 };
 
 export default function Home() {
-	const [timer, setTimer] = useState('');
+	const [timer, setTimer] = useState('[FETCHING DATA]');
 	const [totalSupply, setTotalSupply] = useState('[FETCHING DATA]');
 	const [historicResolutions, setHistoricResolutions] = useState<Resolution[]>([]);
 
