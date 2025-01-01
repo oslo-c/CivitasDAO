@@ -1,4 +1,6 @@
 // utils/timeUtils.js  
+// import { resolve } from '../socket/index.js';
+
 export function currentTime() {
     // Just calls timeToResolve() for the current date
     return timeToResolve(new Date());
@@ -11,8 +13,9 @@ export function currentTime() {
     const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
   
-    if (seconds % 10 === 0) {
-      return '[RESOLVING]';
+    if (seconds === 0 && minutes === 0) {
+      resolve();
+      return null;
     }
   
     const paddedMinutes = String(minutes).padStart(2, '0');

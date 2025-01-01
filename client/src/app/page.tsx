@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 
 
 import { Heading, Text, Flex, Button, Grid, Icon, InlineCode, Logo, LetterFx, Arrow, GlitchFx } from '@/once-ui/components';
@@ -9,8 +10,9 @@ import Link from 'next/link';
 
 // Define the type for a resolution
 type Resolution = {
+	resolution_id: string;
 	timestamp: string;
-	message: string;
+	action: string;
 };
 
 export default function Home() {
@@ -18,25 +20,13 @@ export default function Home() {
 	const [totalSupply, setTotalSupply] = useState('[FETCHING DATA]');
 	const [historicResolutions, setHistoricResolutions] = useState<Resolution[]>([]);
 
-	const links = [
-		{
-			href: "https://once-ui.com/docs/theming",
-			title: "Concept",
-		},
-		{
-			href: "https://once-ui.com/docs/flexComponent",
-			title: "Tokenomics",
-		},
-		{
-			href: "https://once-ui.com/docs/typography",
-			title: "Connect",
-		},
-	];
 
 	const resolutionsEndRef = useRef<HTMLDivElement | null>(null);
+	const socketRef = useRef<Socket | null>(null);
 
 	useEffect(() => {
 		const socket = io('http://localhost:4000');
+		socketRef.current = socket;
 
 		socket.on('time', (time) => {
 			setTimer(time);
@@ -60,6 +50,12 @@ export default function Home() {
 			resolutionsEndRef.current.scrollIntoView({ behavior: 'smooth' });
 		}
 	}, [historicResolutions]);
+
+	const handleButtonClick = (buttonId: string) => {
+		if (socketRef.current) {
+			socketRef.current.emit('buttonClick', buttonId);
+		}
+	};
 
 	return (
 		<Flex
@@ -145,6 +141,7 @@ export default function Home() {
 										padding: 'var(--static-space-4) var(--static-space-8)', 
 										boxSizing: 'border-box' 
 									}}
+									onClick={() => handleButtonClick('decreaseBurn')}
 								>
 									Decrease Burn
 								</Button>
@@ -157,6 +154,7 @@ export default function Home() {
 										padding: 'var(--static-space-4) var(--static-space-8)', 
 										boxSizing: 'border-box' 
 									}}
+									onClick={() => handleButtonClick('increaseBurn')}
 								>
 									Increase Burn
 								</Button>
@@ -169,6 +167,7 @@ export default function Home() {
 										padding: 'var(--static-space-4) var(--static-space-8)', 
 										boxSizing: 'border-box' 
 									}}
+									onClick={() => handleButtonClick('decreaseMint')}
 								>
 									Decrease Mint
 								</Button>
@@ -181,6 +180,7 @@ export default function Home() {
 										padding: 'var(--static-space-4) var(--static-space-8)', 
 										boxSizing: 'border-box' 
 									}}
+									onClick={() => handleButtonClick('increaseMint')}
 								>
 									Increase Mint
 								</Button>
@@ -195,6 +195,7 @@ export default function Home() {
 										padding: 'var(--static-space-4) var(--static-space-8)', 
 										boxSizing: 'border-box' 
 									}}
+									onClick={() => handleButtonClick('pauseSystem')}
 								>
 									Pause System
 								</Button>
@@ -222,7 +223,7 @@ export default function Home() {
 							}}>
 							{historicResolutions.map((resolution, index) => (
 								<div key={index} style={{ padding: '2px', marginBottom: '2px', display: 'block' }}>
-									<span>Resolution @{resolution.timestamp}: {resolution.message}</span>
+									<span>Resolution {resolution.resolution_id} @ {resolution.timestamp}: {resolution.action}</span>
 								</div>
 							))}
 							<div ref={resolutionsEndRef} />

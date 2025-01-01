@@ -16,8 +16,11 @@ export async function initDB() {
   await db.exec(`
     CREATE TABLE IF NOT EXISTS resolutions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      timestamp TEXT NOT NULL,
-      message TEXT NOT NULL
+      resolution_id TEXT NOT NULL,
+      action TEXT NOT NULL,
+      burned_amount INTEGER NOT NULL,
+      minted_amount INTEGER NOT NULL,
+      timestamp TEXT NOT NULL
     )
   `);
 
@@ -25,11 +28,12 @@ export async function initDB() {
 }
 
 // Create a resolution row
-export async function createResolution(timestamp, message) {
+export async function createResolution(resolution_id, action, burned_amount, minted_amount, timestamp) {
   const result = await db.run(
-    `INSERT INTO resolutions (timestamp, message) VALUES (?, ?)`,
-    [timestamp, message]
+    `INSERT INTO resolutions (resolution_id, action, burned_amount, minted_amount, timestamp) VALUES (?, ?, ?, ?, ?)`,
+    [resolution_id, action, burned_amount, minted_amount, timestamp]
   );
+  console.log(`ID: ${resolution_id}, Action: ${action}, Burned: ${burned_amount}, Minted: ${minted_amount}, Timestamp: ${timestamp}`); // log for testing
   return result.lastID; // return the new row’s ID
 }
 

@@ -18,12 +18,12 @@ router.get('/', async (req, res) => {
 // POST /resolutions -> Insert a new resolution
 router.post('/', async (req, res) => {
   try {
-    const { timestamp, message } = req.body;
-    if (!timestamp || !message) {
-      return res.status(400).json({ error: 'timestamp and message are required' });
+    const { resolution_id, action, burned_amount, minted_amount, timestamp } = req.body;
+    if (!resolution_id || !action || !burned_amount || !minted_amount || !timestamp) {
+      return res.status(400).json({ error: 'resolution_id, action, burned_amount, minted_amount, and timestamp are required' });
     }
-    const id = await createResolution(timestamp, message);
-    res.status(201).json({ message: 'Resolution created', id });
+    const id = await createResolution(resolution_id, action, burned_amount, minted_amount, timestamp);
+    res.status(201).json({ message: 'Resolution created', resolution_id });
   } catch (err) {
     console.error('Error creating resolution:', err);
     res.status(500).json({ error: 'Failed to create resolution' });
@@ -31,20 +31,3 @@ router.post('/', async (req, res) => {
 });
 
 export default router;
-
-/* 
-class Resolution {
-    constructor(timestamp, message, link) {
-        this.timestamp = timestamp;
-        this.message = message;
-        // this.link = link;
-    }
-}
-
-Resolution.prototype.toString = function() {
-    return `Resolution @ ${this.timestamp}: ${this.message}`;
-}
-
-
-export default Resolution;
-*/
